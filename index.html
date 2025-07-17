@@ -22,8 +22,7 @@
       transition: filter 0.3s;
       max-width: 1150px;
       margin: 0 auto;
-      opacity: 85%
-      
+      opacity: 85%;
     }
 
     h1:hover {
@@ -42,7 +41,7 @@
 
     .tile {
       position: relative;
-      padding-bottom: 56.25%; /* 16:9 */
+      padding-bottom: 56.25%;
       border-radius: 12px;
       overflow: hidden;
       cursor: pointer;
@@ -63,7 +62,6 @@
       filter: none;
     }
 
-    /* Modal overlay */
     .overlay {
       position: fixed;
       inset: 0;
@@ -91,18 +89,45 @@
     .blurred {
       filter: blur(8px);
     }
+
+    /* Responsive styles for mobile */
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 4rem;
+        padding: 1rem;
+        /* Left-aligned on mobile */
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+        padding: 0 1rem 4rem;
+      }
+
+      .overlay iframe {
+        width: 95vw;
+        height: 53.4vw;
+      }
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 2.25rem;
+      }
+
+      .overlay iframe {
+        height: 56.25vw;
+      }
+    }
   </style>
 </head>
 <body>
 
 <h1>COMMERCIAL</h1>
 
-<!-- Wrapped grid with fade-mask -->
 <div class="fade-mask">
   <div class="grid" id="video-grid"></div>
 </div>
 
-<!-- Modal Overlay -->
 <div class="overlay" id="video-overlay"></div>
 
 <script>
@@ -116,7 +141,6 @@ const overlay = document.getElementById('video-overlay');
 const players = {};
 let activePlayer = null;
 
-// Create each tile
 videoIds.forEach(id => {
   const tile = document.createElement('div');
   tile.className = 'tile';
@@ -128,21 +152,17 @@ videoIds.forEach(id => {
   tile.appendChild(iframe);
   grid.appendChild(tile);
 
-  // Preview player
   const previewPlayer = new Vimeo.Player(iframe);
   players[id] = previewPlayer;
 
   tile.addEventListener('click', () => {
-    // Pause all previews
     Object.values(players).forEach(p => {
       p.pause().catch(() => {});
     });
 
-    // Blur background
     document.querySelector('.grid').classList.add('blurred');
     document.querySelector('h1').classList.add('blurred');
 
-    // Create fullscreen player
     overlay.innerHTML = '';
     const fullIframe = document.createElement('iframe');
     fullIframe.src = `https://player.vimeo.com/video/${id}?autoplay=1&muted=0&controls=1`;
@@ -154,14 +174,9 @@ videoIds.forEach(id => {
     activePlayer = player;
 
     player.on('ended', closeOverlay);
-    player.on('pause', () => {
-      // Optional: auto-close on pause
-      // closeOverlay();
-    });
   });
 });
 
-// Close overlay on click outside video
 overlay.addEventListener('click', (e) => {
   if (e.target === overlay) {
     closeOverlay();
@@ -174,7 +189,6 @@ function closeOverlay() {
   document.querySelector('.grid').classList.remove('blurred');
   document.querySelector('h1').classList.remove('blurred');
 
-  // Resume previews
   Object.values(players).forEach(p => {
     p.setVolume(0);
     p.setLoop(true);
