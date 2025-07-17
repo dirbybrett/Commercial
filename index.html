@@ -16,8 +16,8 @@
     }
 
     h1 {
-      font-size: 6rem;
-      padding: 2rem 2rem 1rem;
+      font-size: 8rem;
+      padding: 1rem 1rem 0.1rem;
       filter: blur(3px);
       transition: filter 0.3s;
       max-width: 1150px;
@@ -26,6 +26,12 @@
 
     h1:hover {
       filter: none;
+    }
+
+    .fade-mask {
+      position: relative;
+      mask-image: linear-gradient(to bottom, transparent 0%, black 5%, black 100%);
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 5%, black 100%);
     }
 
     .grid {
@@ -94,7 +100,11 @@
 <body>
 
 <h1>COMMERCIAL</h1>
-<div class="grid" id="video-grid"></div>
+
+<!-- Wrapped grid with fade-mask -->
+<div class="fade-mask">
+  <div class="grid" id="video-grid"></div>
+</div>
 
 <!-- Modal Overlay -->
 <div class="overlay" id="video-overlay"></div>
